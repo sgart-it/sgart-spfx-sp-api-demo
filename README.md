@@ -10,6 +10,34 @@ Webpart SPFx per testare le chiamate GET alle API di SharePoint API.
 
 ![JavaScript](assets/sgart-spfx-sp-api-demo-js.png)
 
+### Esempio di JavaScript generato
+
+```javascript
+var fetchGetJson = async (url, odataVerbose, outputNormal) => {
+    /* to paste into the 'Browser Developer Console' in another Tenant */
+    var ct = "application/json; odata=" + (odataVerbose ? "verbose" : "nometadata");
+    var response = await fetch(url, { method: "GET", headers: { "Accept": ct, "Content-Type": ct }});
+    if (!response.ok) {
+        var txt = await response.json();
+        throw new Error(`Response status: ${response.status}, ${response.statusText}, ${txt}`);
+    }
+    console.debug("fetchGetJson: OK " + url);
+    var data = await response.json();
+    if(outputNormal) return data;
+    if(odataVerbose) {
+      if(data.d && data.d.results) return data.d.results;
+      else if(data.d) return data.d;
+      return data;
+    } 
+    return data.value ?? data;
+};
+/* sample by Sgart.it v. 1.2025-07-26.BETA*/
+
+var relativeUrl = `/_api/web/lists/getbytitle('Documents')/items?$top=500&`;
+var data = await fetchGetJson(relativeUrl, false, true);
+console.log("API result", data);
+```
+
 ## Debug
 
 La prima volta che si scarica il progetto (git clone)
