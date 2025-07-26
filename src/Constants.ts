@@ -1,0 +1,4 @@
+export const VERSION = '1.2025-07-26';
+export const SOLUTION_NAME = 'sgart-spfx-api-demo';
+export const SGART_NAME = "Sgart.it";
+export const SGART_URL = "https://www.sgart.it";

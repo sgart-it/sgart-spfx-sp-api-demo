@@ -1,0 +1,18 @@
+{
+  "@microsoft/generator-sharepoint": {
+    "plusBeta": false,
+    "isCreatingSolution": true,
+    "nodeVersion": "22.14.0",
+    "sdksVersions": {},
+    "version": "1.21.1",
+    "libraryName": "sgart-spfx-api-demo",
+    "libraryId": "78ea5a8f-ba00-4807-bc63-901d8ea12156",
+    "environment": "spo",
+    "packageManager": "npm",
+    "solutionName": "sgart-spfx-api-demo",
+    "solutionShortDescription": "sgart-spfx-api-demo description",
+    "skipFeatureDeployment": true,
+    "isDomainIsolated": false,
+    "componentType": "webpart"
+  }
+}

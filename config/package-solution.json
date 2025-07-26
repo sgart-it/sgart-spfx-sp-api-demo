@@ -1,0 +1,40 @@
+{
+  "$schema": "https://developer.microsoft.com/json-schemas/spfx-build/package-solution.schema.json",
+  "solution": {
+    "name": "sgart-spfx-api-demo-client-side-solution",
+    "id": "78ea5a8f-ba00-4807-bc63-901d8ea12156",
+    "version": "1.0.0.4",
+    "includeClientSideAssets": true,
+    "skipFeatureDeployment": true,
+    "isDomainIsolated": false,
+    "developer": {
+      "name": "",
+      "websiteUrl": "",
+      "privacyUrl": "",
+      "termsOfUseUrl": "",
+      "mpnId": "Undefined-1.21.1"
+    },
+    "metadata": {
+      "shortDescription": {
+        "default": "sgart-spfx-api-demo description"
+      },
+      "longDescription": {
+        "default": "sgart-spfx-api-demo description"
+      },
+      "screenshotPaths": [],
+      "videoUrl": "",
+      "categories": []
+    },
+    "features": [
+      {
+        "title": "sgart-spfx-api-demo Feature",
+        "description": "The feature that activates elements of the sgart-spfx-api-demo solution.",
+        "id": "d5990aa4-f4c3-4f68-afe7-f219326dbbc4",
+        "version": "1.0.0.0"
+      }
+    ]
+  },
+  "paths": {
+    "zippedPackage": "solution/sgart-spfx-api-demo.sppkg"
+  }
+}
