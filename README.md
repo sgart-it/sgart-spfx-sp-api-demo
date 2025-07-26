@@ -1,11 +1,14 @@
-# sgart-spfx-api-demo
+# sgart-spfx-sp-api-demo
 
 ## Summary
 
-Short summary on functionality and used technologies.
+Webpart SPFx per testare le chiamate GET alle API di SharePoint API. 
 
-[picture of the solution in action, if possible]
+![Icon](assets/sgart-spfx-sp-api-demo-icon.png)
 
+![Screenshot](assets/sgart-spfx-sp-api-demo.png)
+
+![JavaScript](assets/sgart-spfx-sp-api-demo-js.png)
 
 ## Debug
 
@@ -13,13 +16,13 @@ La prima volta che si scarica il progetto (git clone)
 
 npm install
 
-Nom modificare il file **serve.json** deve avere la variabile **{tenantDomain}** ( initialPage="https://{tenantDomain}/sites/siteName/_layouts/workbench.aspx" ) aggiornare **siteName**.
+**NON** modificare il file **serve.json** deve avere la variabile **{tenantDomain}** ( initialPage="https://{tenantDomain}/sites/siteName/_layouts/workbench.aspx" ) aggiornare solo **siteName**.
 
-Per fare dedug sostituire **tenantName**:
+Per fare dedug sostituire **tenantName** nel comandi qui sotto:
 
  $env:SPFX_SERVE_TENANT_DOMAIN="tenantName.sharepoint.com"; gulp serve --nobrowser
 
-per fare deploy con la solution installata 
+per fare deploy con la solution installata indicare la query string
 
 https://tenantName.sharepoint.com/_layouts/15/workbench.aspx?debug=true&noredir=true&debugManifestsFile=https://localhost:4321/temp/build/manifests.js
 

@@ -52,13 +52,15 @@ const ApiDemo: React.FC<IApiDemoProps> = (props) => {
   const [odataVerbose, setOdataVerbose] = useState(false);
   const [resultTabSelected, setResultTabSelected] = useState('response');
 
-  const jsItems: ICommandBarItemProps[] = [
+  const responseCommandBarItems: ICommandBarItemProps[] = [
     {
-      key: 'jsCopy',
+      key: 'cmdCopy',
       text: 'Copy',
       iconProps: { iconName: 'Copy' },
       onClick: () => {
-        const txt = H.buildJavaScript(apiQuery, odataVerbose, outputNormal);
+        const txt = resultTabSelected ==='response'
+        ? queryResult
+        : H.buildJavaScript(apiQuery, odataVerbose, outputNormal);
         navigator.clipboard.writeText(txt)
           .then(() => {
             // Optionally, provide feedback to the user, e.g., display a tooltip or alert
@@ -217,12 +219,13 @@ const ApiDemo: React.FC<IApiDemoProps> = (props) => {
             getTabId={getTabId}>
             <PivotItem headerText="JSON Response" itemKey='response'>
               <div className={styles.responseJson}>
+                <CommandBar items={responseCommandBarItems} className={styles.jsCommandBar} />
                 <pre className={styles.responseJsonOutput}>{queryResult}</pre>
               </div>
             </PivotItem>
             <PivotItem headerText="JavaScript" itemKey='javascript'>
               <div className={styles.responseJson}>
-                <CommandBar items={jsItems} className={styles.jsCommandBar} />
+                <CommandBar items={responseCommandBarItems} className={styles.jsCommandBar} />
                 <pre className={styles.responseJsonOutput}>{H.buildJavaScript(apiQuery, odataVerbose, outputNormal)}</pre>
               </div>
             </PivotItem>
