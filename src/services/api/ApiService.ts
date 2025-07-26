@@ -49,7 +49,7 @@ export default class ApiService {
                     status: response.status,
                     statusText: response.statusText,
                     url: response.url,
-                    message: err
+                    originalResponse: err
                 };
             }
             console.debug(LOG_SOURCE, "fetchGetJson: OK " + url);

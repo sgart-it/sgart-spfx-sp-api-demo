@@ -182,15 +182,33 @@ export const ConfigsData: Configs = {
                 }
             ]
         },
-                {
+        {
             id: "userProfile",
             title: "User Profile",
             actions: [
                 {
-                    id: "get",
-                    title: "Get term sets",
+                    id: "getPMInstance",
+                    title: "PeopleManager instance",
                     url: "/_api/SP.UserProfiles.PeopleManager"
+                },
+                {
+                    id: "getPMFollowedByMe",
+                    title: "Followed by ME",
+                    url: "/_api/SP.UserProfiles.PeopleManager/getpeoplefollowedbyme",
+                    query: {
+                        select: "*"
+                    }
+                },
+                                {
+                    id: "getPMFollowedBy",
+                    title: "Followed by ...",
+                    url: "/_api/SP.UserProfiles.PeopleManager/getpeoplefollowedby(@v)?@v='i%3A0%23.f%7Cmembership%7Cuser%40domain.onme",
+                    query: {
+                        select: "*"
+                    }
                 }
+
+
             ]
         },
         {

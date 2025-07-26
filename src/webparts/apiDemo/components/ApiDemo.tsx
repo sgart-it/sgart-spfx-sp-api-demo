@@ -47,7 +47,9 @@ const ApiDemo: React.FC<IApiDemoProps> = (props) => {
   const [actions, setActions] = useState<ConfigsAction[]>([]);
   const [actionId, setActionId] = useState("");
   const [apiQuery, setApiQuery] = useState<ApiQuery | undefined>(undefined);
-  const [queryResult, setQueryResult] = useState("");
+  const [queryResultJson, setQueryResultJson] = useState("");
+  const [queryResultCount, setQueryResultCount] = useState(0);
+  const [queryResultJS, setQueryResultJS] = useState("");
   const [outputNormal, setOutputNormal] = useState(true);
   const [odataVerbose, setOdataVerbose] = useState(false);
   const [resultTabSelected, setResultTabSelected] = useState('response');
@@ -58,9 +60,7 @@ const ApiDemo: React.FC<IApiDemoProps> = (props) => {
       text: 'Copy',
       iconProps: { iconName: 'Copy' },
       onClick: () => {
-        const txt = resultTabSelected ==='response'
-        ? queryResult
-        : H.buildJavaScript(apiQuery, odataVerbose, outputNormal);
+        const txt = resultTabSelected === 'response' ? queryResultJson : queryResultJS;
         navigator.clipboard.writeText(txt)
           .then(() => {
             // Optionally, provide feedback to the user, e.g., display a tooltip or alert
@@ -76,7 +76,9 @@ const ApiDemo: React.FC<IApiDemoProps> = (props) => {
   const changeApiQuery = (actionId: string): void => {
     console.debug(LOG_SOURCE, `changeApiQuery: Group: ${groupId}, Action: ${actionId}`);
 
-    setQueryResult("");
+    setQueryResultJson("");
+    setQueryResultJS("");
+    setQueryResultCount(0);
 
     const action = actions.filter(a => a.id === actionId)[0];
 
@@ -176,14 +178,26 @@ const ApiDemo: React.FC<IApiDemoProps> = (props) => {
       const url = H.buildQuery(apiQuery);
       console.debug(LOG_SOURCE, `executeQuery`, `Executing query: ${url}`);
 
-      setQueryResult('Loading ...');
+      setQueryResultJson('Loading ...');
       setResultTabSelected('response');
 
       const result = await dataService.api.executeQueryGet(url, outputNormal, odataVerbose);
       console.log(LOG_SOURCE, "API result", result);
-      setQueryResult(JSON.stringify(result, null, 4));
+
+      setQueryResultJson(JSON.stringify(result, null, 4));
+      setQueryResultJS(H.buildJavaScript(apiQuery, odataVerbose, outputNormal));
+
+      const r = result as any;
+      if (r) {
+        if (r.d) {
+          setQueryResultCount(r.d.results ? r.d.results.length : 1);
+        } else
+          setQueryResultCount(r.value ? r.value.length : 1);
+      }
+
     } catch (error) {
-      setQueryResult(JSON.stringify(error, null, 4));
+      setQueryResultJson(JSON.stringify(error, null, 4));
+      setQueryResultJS("");
     }
   };
 
@@ -208,7 +222,7 @@ const ApiDemo: React.FC<IApiDemoProps> = (props) => {
           <div className={styles.queryUrl}>
             <Stack horizontal tokens={stackTokens} styles={{ root: { width: '100%' } }}>
               <TextField label="Query" readOnly value={H.buildQuery(apiQuery)} styles={{ root: { width: '100%' } }} />
-              <Dropdown label="odata" options={odataOptions} defaultSelectedKey={odataVerbose ? '1' : '0'} onChange={(_, newValue) => { setOdataVerbose(newValue?.key.toString() === "1") }} styles={{ root: { width: '120px' } }} />
+              <Dropdown label="odata" options={odataOptions} defaultSelectedKey={odataVerbose ? '1' : '0'} onChange={(_, newValue) => { setOdataVerbose(newValue?.key.toString() === "1") }} styles={{ root: { width: '180px' } }} />
               <Dropdown label="Output" options={outputOptions} defaultSelectedKey={outputNormal ? '1' : '0'} onChange={(_, newValue) => { setOutputNormal(newValue?.key.toString() === "1") }} styles={{ root: { width: '90px' } }} />
             </Stack>
           </div>
@@ -217,16 +231,16 @@ const ApiDemo: React.FC<IApiDemoProps> = (props) => {
             selectedKey={resultTabSelected}
             onLinkClick={(item?: PivotItem) => { if (item) setResultTabSelected(item?.props?.itemKey || '') }}
             getTabId={getTabId}>
-            <PivotItem headerText="JSON Response" itemKey='response'>
+            <PivotItem headerText="JSON Response" itemKey='response' itemIcon='Code' itemCount={queryResultCount}>
               <div className={styles.responseJson}>
                 <CommandBar items={responseCommandBarItems} className={styles.jsCommandBar} />
-                <pre className={styles.responseJsonOutput}>{queryResult}</pre>
+                <pre className={styles.responseJsonOutput}>{queryResultJson}</pre>
               </div>
             </PivotItem>
-            <PivotItem headerText="JavaScript" itemKey='javascript'>
+            <PivotItem headerText="JavaScript" itemKey='javascript' itemIcon='JS'>
               <div className={styles.responseJson}>
                 <CommandBar items={responseCommandBarItems} className={styles.jsCommandBar} />
-                <pre className={styles.responseJsonOutput}>{H.buildJavaScript(apiQuery, odataVerbose, outputNormal)}</pre>
+                <pre className={styles.responseJsonOutput}>{queryResultJS}</pre>
               </div>
             </PivotItem>
           </Pivot>
