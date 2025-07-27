@@ -10,6 +10,8 @@ Webpart SPFx per testare le chiamate GET alle API di SharePoint API.
 
 ![JavaScript](assets/sgart-spfx-sp-api-demo-js.png)
 
+![Table](assets/sgart-spfx-sp-api-demo-table.png)
+
 ### Esempio di JavaScript generato
 
 ```javascript

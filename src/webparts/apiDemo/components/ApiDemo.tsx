@@ -255,14 +255,15 @@ const ApiDemo: React.FC<IApiDemoProps> = (props) => {
             </PivotItem>
             <PivotItem headerText="Table" itemKey='table' itemIcon='Table'>
               <div className={styles.responseJson}>
-                {queryResultTable?.columns?.length > 0 && <DetailsList
-                  columns={queryResultTable.columns}
-                  items={queryResultTable.items}
-                  compact={true}
-                  layoutMode={DetailsListLayoutMode.justified}
-                  selectionMode={0} // No selection
-                />
-                }
+                  {queryResultTable?.columns?.length > 0 && <DetailsList
+                    columns={queryResultTable.columns}
+                    items={queryResultTable.items}
+                    compact={true}
+                    layoutMode={DetailsListLayoutMode.justified}
+                    selectionMode={0} // No selection
+                    isHeaderVisible={true}
+                  />
+                  }
               </div>
             </PivotItem>
           </Pivot>

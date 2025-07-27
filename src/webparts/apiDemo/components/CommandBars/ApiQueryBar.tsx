@@ -1,5 +1,5 @@
 import * as React from 'react';
-import { IStackTokens, Position, PrimaryButton, SpinButton, Stack, TextField } from '@fluentui/react';
+import { IStackTokens, Position, PrimaryButton, SpinButton, Stack, TextField, TooltipHost } from '@fluentui/react';
 import { SOLUTION_NAME } from '../../../../Constants';
 import { ApiQuery } from '../../../../models/ApiQuery';
 
@@ -41,7 +41,9 @@ const ApiQueryBar: React.FC<ApiQueryBarProps> = (props) => {
                     : <>
                         <Stack horizontal tokens={stackTokens} styles={{ root: { width: '100%' } }}>
                             <TextField label="select" value={select} onChange={(_, newValue) => { onChange({ ...query, select: newValue }) }} styles={{ root: { width: '100%' } }} />
-                            <TextField label="filter" value={filter} onChange={(_, newValue) => { onChange({ ...query, filter: newValue }) }} styles={{ root: { width: '100%' } }} />
+                            <TooltipHost content="Filter is used for $filter, querytext for search">
+                                <TextField label="filter" value={filter} onChange={(_, newValue) => { onChange({ ...query, filter: newValue }) }} styles={{ root: { width: '100%' } }} />
+                            </TooltipHost>
                         </Stack>
                         <Stack horizontal tokens={stackTokens} styles={{ root: { width: '100%' } }}>
                             <TextField label="expand" value={expand} onChange={(_, newValue) => { onChange({ ...query, expand: newValue }) }} styles={{ root: { width: '100%' } }} />

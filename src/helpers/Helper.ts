@@ -76,7 +76,7 @@ const buildTableItem = (item: any): Table => {
         key: 'internalName',
         name: 'InternalName',
         fieldName: 'internalName',
-        minWidth: 150,
+        minWidth: 250,
         isRowHeader: true,
         isResizable: true
       },
@@ -84,7 +84,7 @@ const buildTableItem = (item: any): Table => {
         key: 'value',
         name: 'Value',
         fieldName: 'value',
-        minWidth: 150,
+        minWidth: 450,
         isResizable: true
       }
     ],
