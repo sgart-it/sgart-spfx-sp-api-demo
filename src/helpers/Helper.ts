@@ -1,5 +1,9 @@
-import { VERSION } from "../Constants";
+import { IColumn } from "@fluentui/react";
+import { SOLUTION_NAME, VERSION } from "../Constants";
 import { ApiQuery } from "../models/ApiQuery";
+import { Table } from "../models/TableItem";
+
+const LOG_SOURCE: string = SOLUTION_NAME + ':Helper:';
 
 export const buildQuery = (apiQuery: ApiQuery | undefined): string => {
   if (!apiQuery) {
@@ -54,3 +58,113 @@ var data = await fetchGetJson(relativeUrl, ${odataVerbose.toString().toLocaleLow
 console.log("API result", data);
 `;
 };
+
+export const copyToClipboard = (text: string): void => {
+  navigator.clipboard.writeText(text)
+    .then(() => {
+      console.log('Text copied to clipboard:', text);
+    })
+    .catch(err => {
+      console.error('Failed to copy text: ', err);
+    });
+};
+
+const buildTableItem = (item: any): Table => {
+  const table: Table = {
+    columns: [
+      {
+        key: 'internalName',
+        name: 'InternalName',
+        fieldName: 'internalName',
+        minWidth: 150,
+        isRowHeader: true,
+        isResizable: true
+      },
+      {
+        key: 'value',
+        name: 'Value',
+        fieldName: 'value',
+        minWidth: 150,
+        isResizable: true
+      }
+    ],
+    items: []
+  };
+
+  if (item) {
+    table.items = Object.keys(item).map(key => {
+      const value = item[key];
+      if (typeof value === 'object') {
+        return { internalName: key, value: JSON.stringify(value, null, 2) };
+      }
+      return { internalName: key, value };
+    });
+  }
+  return table;
+};
+
+const buildTableItems = (items: any[]): Table => {
+  const table: Table = {
+    columns: [],
+    items: []
+  };
+
+  if (!items || items.length === 0) {
+    return table;
+  }
+
+  const item: any = items[0];
+  if (item) {
+    table.columns = Object.keys(item).map<IColumn>(key => ({
+      key,
+      name: key,
+      fieldName: key,
+      minWidth: 50,
+      isResizable: true
+    }));
+
+    const newItems: any[] = [];
+    items.forEach(item => {
+      const ni: any = {};
+      Object.keys(item).forEach(key => {
+        const value = item[key];
+        ni[key] = typeof value === 'object'
+          ? JSON.stringify(value, null, 2)
+          : value;
+      });
+      newItems.push(ni);
+    });
+    table.items = newItems;
+
+  }
+  return table;
+
+
+};
+
+export const buildTable = (items: any): Table => {
+  if (!items) {
+    console.debug(LOG_SOURCE, 'buildTable: items is undefined or null');
+    return { columns: [], items: [] };
+  }
+
+  if (items.value && Array.isArray(items.value)) {
+    const table = buildTableItems(items.value);
+    console.debug(LOG_SOURCE, 'buildTable: items.value is an array', table);
+    return table;
+  }
+
+  if (items.d) {
+    if (items.d.results && Array.isArray(items.d.results)) {
+      const table = buildTableItems(items.d.results);
+      console.debug(LOG_SOURCE, 'buildTable: items.d.results is an array', table);
+      return table;
+    } else {
+      const table = buildTableItem(items.d);
+      console.debug(LOG_SOURCE, 'buildTable: items.d is a single object', table);
+      return table;
+    }
+  }
+
+  return buildTableItem(items);
+}

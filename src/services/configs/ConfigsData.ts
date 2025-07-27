@@ -94,7 +94,28 @@ export const ConfigsData: Configs = {
                     title: "Get views",
                     url: "/_api/web/lists/getbytitle('Documents')/views",
                     "query": {
-                        "top": 100
+                        top: 100,
+                        orderBy: "Title"
+                    }
+                },
+                                {
+                    id: "getViewsHidden",
+                    title: "Get views hidden",
+                    url: "/_api/web/lists/getbytitle('Documents')/views",
+                    "query": {
+                        top: 100,
+                        select: "Id, Title, ServerRelativeUrl, ViewQuery",
+                        filter: "Hidden eq true",
+                        orderBy: "Title"
+                    }
+                },
+                {
+                    id: "getContenttypes",
+                    title: "Get content types",
+                    url: "/_api/web/lists/getbytitle('Documents')/contenttypes",
+                    "query": {
+                        select: "*",
+                        orderBy:"Name"
                     }
                 },
             ]
@@ -199,7 +220,7 @@ export const ConfigsData: Configs = {
                         select: "*"
                     }
                 },
-                                {
+                {
                     id: "getPMFollowedBy",
                     title: "Followed by ...",
                     url: "/_api/SP.UserProfiles.PeopleManager/getpeoplefollowedby(@v)?@v='i%3A0%23.f%7Cmembership%7Cuser%40domain.onme",

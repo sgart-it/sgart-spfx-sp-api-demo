@@ -35,19 +35,19 @@ const ApiQueryBar: React.FC<ApiQueryBarProps> = (props) => {
                         </Stack>
                         <Stack horizontal tokens={stackTokens} styles={{ root: { width: '100%' } }}>
                             <TextField label="selectproperties" value={select} onChange={(_, newValue) => { onChange({ ...query, select: newValue }) }} styles={{ root: { width: '90%' } }} />
-                            <SpinButton label="rowlimit" labelPosition={Position.top} value={top?.toString()} onChange={(_, newValue) => { onChange({ ...query, top: newValue ? parseInt(newValue) : 10 }) }} defaultValue='10' min={1} max={5000} step={1} styles={{ root: { width: '10%' } }} />
+                            <SpinButton label="rowlimit" labelPosition={Position.top} value={top?.toString()} onChange={(_, newValue) => { onChange({ ...query, top: newValue ? parseInt(newValue) : 10 }) }} min={1} max={5000} step={1} styles={{ root: { width: '10%' } }} />
                         </Stack>
                     </>
                     : <>
                         <Stack horizontal tokens={stackTokens} styles={{ root: { width: '100%' } }}>
-                            <TextField label="$select" value={select} onChange={(_, newValue) => { onChange({ ...query, select: newValue }) }} styles={{ root: { width: '100%' } }} />
-                            <TextField label="$filter" value={filter} onChange={(_, newValue) => { onChange({ ...query, filter: newValue }) }} styles={{ root: { width: '100%' } }} />
+                            <TextField label="select" value={select} onChange={(_, newValue) => { onChange({ ...query, select: newValue }) }} styles={{ root: { width: '100%' } }} />
+                            <TextField label="filter" value={filter} onChange={(_, newValue) => { onChange({ ...query, filter: newValue }) }} styles={{ root: { width: '100%' } }} />
                         </Stack>
                         <Stack horizontal tokens={stackTokens} styles={{ root: { width: '100%' } }}>
-                            <TextField label="$expand" value={expand} onChange={(_, newValue) => { onChange({ ...query, expand: newValue }) }} styles={{ root: { width: '100%' } }} />
-                            <TextField label="$orderby" value={orderBy} onChange={(_, newValue) => { onChange({ ...query, orderBy: newValue }) }} styles={{ root: { width: '80%' } }} />
-                            <SpinButton label="$top" labelPosition={Position.top} value={top?.toString()} onChange={(_, newValue) => { onChange({ ...query, top: newValue ? parseInt(newValue) : 10 }) }} defaultValue='10' min={1} max={5000} step={1} styles={{ root: { width: '100px' } }} />
-                            <SpinButton label="$skip" labelPosition={Position.top} value={skip?.toString()} onChange={(_, newValue) => { onChange({ ...query, skip: newValue ? parseInt(newValue) : 10 }) }} defaultValue='' min={1} max={5000} step={1} styles={{ root: { width: '100px' } }} />
+                            <TextField label="expand" value={expand} onChange={(_, newValue) => { onChange({ ...query, expand: newValue }) }} styles={{ root: { width: '100%' } }} />
+                            <TextField label="orderby" value={orderBy} onChange={(_, newValue) => { onChange({ ...query, orderBy: newValue }) }} styles={{ root: { width: '80%' } }} />
+                            <SpinButton label="top" labelPosition={Position.top} value={top?.toString()} onChange={(_, newValue) => { onChange({ ...query, top: newValue ? parseInt(newValue) : 0 }) }} min={0} max={5000} step={1} styles={{ root: { width: '100px' } }} />
+                            <SpinButton label="skip" labelPosition={Position.top} value={skip?.toString()} onChange={(_, newValue) => { onChange({ ...query, skip: newValue ? parseInt(newValue) : 0 }) }} min={0} max={5000} step={1} styles={{ root: { width: '100px' } }} />
                         </Stack>
                     </>
                 }

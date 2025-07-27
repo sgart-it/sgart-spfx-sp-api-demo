@@ -6,10 +6,11 @@ import { escape } from '@microsoft/sp-lodash-subset';
 import GroupsCommandBar from './CommandBars/GroupsCommandBar';
 import { SGART_NAME, SGART_URL, SOLUTION_NAME, VERSION } from '../../../Constants';
 import { ConfigsAction, ConfigsGroup, ConfigsQuery } from '../../../models/Configs';
+import { Table } from '../../../models/TableItem';
 import ActionsCommandBar from './CommandBars/ActionsCommandBar';
 import { ApiQuery } from '../../../models/ApiQuery';
 import ApiQueryBar from './CommandBars/ApiQueryBar';
-import { CommandBar, Dropdown, ICommandBarItemProps, IDropdownOption, Pivot, PivotItem, Stack, TextField } from '@fluentui/react';
+import { CommandBar, DetailsList, DetailsListLayoutMode, Dropdown, ICommandBarItemProps, IconButton, IDropdownOption, Pivot, PivotItem, Stack, TextField } from '@fluentui/react';
 import * as H from '../../../helpers/Helper';
 
 const LOG_SOURCE: string = SOLUTION_NAME + ':ApiDemo:';
@@ -26,7 +27,7 @@ const odataOptions: IDropdownOption[] = [
 const stackTokens = { childrenGap: 10 };
 
 const getTabId = (itemKey: string): string => {
-  return `SgarResultTans_${itemKey}`;
+  return `SgarResultTabId_${itemKey}`;
 };
 
 
@@ -47,10 +48,11 @@ const ApiDemo: React.FC<IApiDemoProps> = (props) => {
   const [actions, setActions] = useState<ConfigsAction[]>([]);
   const [actionId, setActionId] = useState("");
   const [apiQuery, setApiQuery] = useState<ApiQuery | undefined>(undefined);
+  const [queryResultUrl, setQueryResultUrl] = useState("");
   const [queryResultJson, setQueryResultJson] = useState("");
   const [queryResultCount, setQueryResultCount] = useState(0);
   const [queryResultJS, setQueryResultJS] = useState("");
-  const [outputNormal, setOutputNormal] = useState(true);
+  const [queryResultTable, setQueryResultTable] = useState<Table>({ columns: [], items: [] }); const [outputNormal, setOutputNormal] = useState(true);
   const [odataVerbose, setOdataVerbose] = useState(false);
   const [resultTabSelected, setResultTabSelected] = useState('response');
 
@@ -61,24 +63,24 @@ const ApiDemo: React.FC<IApiDemoProps> = (props) => {
       iconProps: { iconName: 'Copy' },
       onClick: () => {
         const txt = resultTabSelected === 'response' ? queryResultJson : queryResultJS;
-        navigator.clipboard.writeText(txt)
-          .then(() => {
-            // Optionally, provide feedback to the user, e.g., display a tooltip or alert
-            console.log(LOG_SOURCE, 'Text copied to clipboard', txt);
-          })
-          .catch(err => {
-            console.error(LOG_SOURCE, 'Failed to copy text: ', err);
-          });
+        H.copyToClipboard(txt);
       }
     }
   ];
 
-  const changeApiQuery = (actionId: string): void => {
-    console.debug(LOG_SOURCE, `changeApiQuery: Group: ${groupId}, Action: ${actionId}`);
-
+  const clearQueryResult = (): void => {
+    console.debug(LOG_SOURCE, `clearQueryResult`);
+    setQueryResultUrl("");
     setQueryResultJson("");
     setQueryResultJS("");
     setQueryResultCount(0);
+    setQueryResultTable({ columns: [], items: [] });
+  };
+
+  const changeApiQuery = (actionId: string): void => {
+    console.debug(LOG_SOURCE, `changeApiQuery: Group: ${groupId}, Action: ${actionId}`);
+
+    clearQueryResult();
 
     const action = actions.filter(a => a.id === actionId)[0];
 
@@ -90,7 +92,7 @@ const ApiDemo: React.FC<IApiDemoProps> = (props) => {
       filter: '',
       expand: '',
       orderBy: '',
-      top: apiQuery?.top || 500
+      top: apiQuery?.top || 100
     } as ApiQuery;
 
     if (action) {
@@ -103,7 +105,7 @@ const ApiDemo: React.FC<IApiDemoProps> = (props) => {
         if (query.filter) q.filter = query.filter || '';
         if (query.expand) q.expand = query.expand || '';
         if (query.orderBy) q.orderBy = query.orderBy || '';
-        if (query.top) q.top = query.top || 500;
+        if (query.top) q.top = query.top;
         if (query.skip) q.skip = query.skip;
       }
     }
@@ -175,7 +177,10 @@ const ApiDemo: React.FC<IApiDemoProps> = (props) => {
     }
 
     try {
+      clearQueryResult();
+
       const url = H.buildQuery(apiQuery);
+      setQueryResultUrl(url);
       console.debug(LOG_SOURCE, `executeQuery`, `Executing query: ${url}`);
 
       setQueryResultJson('Loading ...');
@@ -186,6 +191,7 @@ const ApiDemo: React.FC<IApiDemoProps> = (props) => {
 
       setQueryResultJson(JSON.stringify(result, null, 4));
       setQueryResultJS(H.buildJavaScript(apiQuery, odataVerbose, outputNormal));
+      setQueryResultTable(H.buildTable(result));
 
       const r = result as any;
       if (r) {
@@ -221,12 +227,16 @@ const ApiDemo: React.FC<IApiDemoProps> = (props) => {
           </div>
           <div className={styles.queryUrl}>
             <Stack horizontal tokens={stackTokens} styles={{ root: { width: '100%' } }}>
-              <TextField label="Query" readOnly value={H.buildQuery(apiQuery)} styles={{ root: { width: '100%' } }} />
+              <Stack horizontal styles={{ root: { width: '100%' } }}>
+                <TextField label="Query" readOnly value={queryResultUrl} styles={{ root: { width: '100%' } }} />
+                <IconButton iconProps={{ iconName: 'Copy' }} title="Copy" ariaLabel="Copy" className={styles.copyQuery} onClick={() => H.copyToClipboard(queryResultUrl)} />
+              </Stack>
               <Dropdown label="odata" options={odataOptions} defaultSelectedKey={odataVerbose ? '1' : '0'} onChange={(_, newValue) => { setOdataVerbose(newValue?.key.toString() === "1") }} styles={{ root: { width: '180px' } }} />
               <Dropdown label="Output" options={outputOptions} defaultSelectedKey={outputNormal ? '1' : '0'} onChange={(_, newValue) => { setOutputNormal(newValue?.key.toString() === "1") }} styles={{ root: { width: '90px' } }} />
             </Stack>
           </div>
 
+          {/****** Result tabs ******/}
           <Pivot linkFormat="tabs"
             selectedKey={resultTabSelected}
             onLinkClick={(item?: PivotItem) => { if (item) setResultTabSelected(item?.props?.itemKey || '') }}
@@ -237,16 +247,28 @@ const ApiDemo: React.FC<IApiDemoProps> = (props) => {
                 <pre className={styles.responseJsonOutput}>{queryResultJson}</pre>
               </div>
             </PivotItem>
-            <PivotItem headerText="JavaScript" itemKey='javascript' itemIcon='JS'>
+            <PivotItem headerText="JavaScript" itemKey='javascript' itemIcon='Table'>
               <div className={styles.responseJson}>
                 <CommandBar items={responseCommandBarItems} className={styles.jsCommandBar} />
                 <pre className={styles.responseJsonOutput}>{queryResultJS}</pre>
               </div>
             </PivotItem>
+            <PivotItem headerText="Table" itemKey='table' itemIcon='JS'>
+              <div className={styles.responseJson}>
+                {queryResultTable?.columns?.length > 0 && <DetailsList
+                  columns={queryResultTable.columns}
+                  items={queryResultTable.items}
+                  compact={true}
+                  layoutMode={DetailsListLayoutMode.justified}
+                  selectionMode={0} // No selection
+                />
+                }
+              </div>
+            </PivotItem>
           </Pivot>
         </>
       }
-      <div>v. {VERSION} by <a href={SGART_URL} target="_blank" rel="noreferrer">{SGART_NAME}</a> - API reference <a href="https://learn.microsoft.com/en-us/sharepoint/dev/sp-add-ins/get-to-know-the-sharepoint-rest-service?tabs=csom" target="_blank" rel="noreferrer">Get to know the SharePoint REST service</a></div>
+      <div>v. {VERSION} by <a href={SGART_URL} target="_blank" rel="noreferrer" className={styles.link}>{SGART_NAME}</a> - API reference: <a href="https://learn.microsoft.com/en-us/sharepoint/dev/sp-add-ins/get-to-know-the-sharepoint-rest-service?tabs=csom" target="_blank" rel="noreferrer" className={styles.link}>Get to know the SharePoint REST service</a></div>
     </section>
   );
 };

@@ -64,6 +64,7 @@ caricare il file .\sharepoint\solution\packageName.sppkg nell [App Catalog](http
 
 [SPFx Full width](https://learn.microsoft.com/en-us/sharepoint/dev/spfx/web-parts/basics/use-web-parts-full-width-column)
 
+[Themes and colors](https://learn.microsoft.com/en-us/sharepoint/dev/design/themes-colors)
 
 ## Used SharePoint Framework Version
 

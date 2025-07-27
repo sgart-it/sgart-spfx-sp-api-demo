@@ -3,7 +3,7 @@
   "solution": {
     "name": "sgart-spfx-sp-api-demo-client-side-solution",
     "id": "78ea5a8f-ba00-4807-bc63-901d8ea12156",
-    "version": "1.0.1.0",
+    "version": "1.0.2.0",
     "includeClientSideAssets": true,
     "skipFeatureDeployment": true,
     "isDomainIsolated": false,
