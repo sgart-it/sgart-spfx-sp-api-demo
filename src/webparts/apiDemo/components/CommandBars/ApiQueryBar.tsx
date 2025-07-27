@@ -41,7 +41,7 @@ const ApiQueryBar: React.FC<ApiQueryBarProps> = (props) => {
                     : <>
                         <Stack horizontal tokens={stackTokens} styles={{ root: { width: '100%' } }}>
                             <TextField label="select" value={select} onChange={(_, newValue) => { onChange({ ...query, select: newValue }) }} styles={{ root: { width: '100%' } }} />
-                            <TooltipHost content="Filter is used for $filter, querytext for search">
+                            <TooltipHost content="Filter: lt, le, gt, ge, eq, ne, startswith('string', 'string'), substringof('string', 'string'), day(DateTime), month(DateTime), ..." styles={{ root: { width: '100%'} }} calloutProps={{ gapSpace: 0 }}>
                                 <TextField label="filter" value={filter} onChange={(_, newValue) => { onChange({ ...query, filter: newValue }) }} styles={{ root: { width: '100%' } }} />
                             </TooltipHost>
                         </Stack>
