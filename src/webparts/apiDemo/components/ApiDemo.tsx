@@ -247,13 +247,13 @@ const ApiDemo: React.FC<IApiDemoProps> = (props) => {
                 <pre className={styles.responseJsonOutput}>{queryResultJson}</pre>
               </div>
             </PivotItem>
-            <PivotItem headerText="JavaScript" itemKey='javascript' itemIcon='Table'>
+            <PivotItem headerText="JavaScript" itemKey='javascript' itemIcon='JS'>
               <div className={styles.responseJson}>
                 <CommandBar items={responseCommandBarItems} className={styles.jsCommandBar} />
                 <pre className={styles.responseJsonOutput}>{queryResultJS}</pre>
               </div>
             </PivotItem>
-            <PivotItem headerText="Table" itemKey='table' itemIcon='JS'>
+            <PivotItem headerText="Table" itemKey='table' itemIcon='Table'>
               <div className={styles.responseJson}>
                 {queryResultTable?.columns?.length > 0 && <DetailsList
                   columns={queryResultTable.columns}
