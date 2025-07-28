@@ -31,6 +31,21 @@ export const ConfigsData: Configs = {
                     id: "getWebById",
                     title: "Get sub webs",
                     url: "/_api/web/webs"
+                },
+                {
+                    id: "getWebSiteUsers",
+                    title: "Get site users",
+                    url: "/_api/web/siteusers"
+                },
+                {
+                    id: "getWebSiteGrous",
+                    title: "Get site groups",
+                    url: "/_api/web/sitegroups"
+                },
+                {
+                    id: "getWebRoleDefinitions",
+                    title: "Get site role definitions",
+                    url: "/_api/web/roledefinitions"
                 }
             ]
         },
@@ -98,7 +113,7 @@ export const ConfigsData: Configs = {
                         orderBy: "Title"
                     }
                 },
-                                {
+                {
                     id: "getViewsHidden",
                     title: "Get views hidden",
                     url: "/_api/web/lists/getbytitle('Documents')/views",
@@ -115,7 +130,7 @@ export const ConfigsData: Configs = {
                     url: "/_api/web/lists/getbytitle('Documents')/contenttypes",
                     "query": {
                         select: "*",
-                        orderBy:"Name"
+                        orderBy: "Name"
                     }
                 },
             ]
@@ -142,6 +157,11 @@ export const ConfigsData: Configs = {
                         select: "Title,Id",
                         orderBy: "Title asc"
                     }
+                },
+                {
+                    id: "getItemAttachments",
+                    title: "Get item attachments",
+                    url: "/_api/web/lists/getbytitle('Documents')/items(1)/AttachmentFiles",
                 }
             ]
         },
@@ -173,7 +193,7 @@ export const ConfigsData: Configs = {
                 {
                     id: "getFolderByServerRelativeUrl",
                     title: "Get folder by server relative url",
-                    url: "/_api/web/getfolderbyserverrelativeurl('/sites/someSite/Shared Documents')"
+                    url: "/_api/web/getfolderbyserverrelativeurl('Shared Documents')"
                 },
                 {
                     id: "getFolderById",
@@ -181,9 +201,14 @@ export const ConfigsData: Configs = {
                     url: "/_api/web/getfolderbyid('00000000-0000-0000-0000-000000000000')"
                 },
                 {
-                    id: "getFolderContent",
-                    title: "Get folder content",
-                    url: "/_api/web/getfolderbyserverrelativeurl('/sites/someSite/Shared Documents')/files"
+                    id: "getFolderFiles",
+                    title: "Get folder files",
+                    url: "/_api/web/getfolderbyserverrelativeurl('Shared Documents')/files"
+                },
+                {
+                    id: "getFolderFileContent",
+                    title: "Get folder files",
+                    url: "/_api/web/getfolderbyserverrelativeurl('/sites/someSite/Shared Documents/file name')/$value"
                 }
             ]
         },
@@ -237,19 +262,29 @@ export const ConfigsData: Configs = {
             title: "Taxonomy",
             actions: [
                 {
-                    id: "getTermSets",
-                    title: "Get term sets",
-                    url: "/_api/v2.1/termStore/sets"
+                    id: "getTermStoreGroups",
+                    title: "Get groups",
+                    url: "/_api/v2.1/termStore/groups"
                 },
                 {
-                    id: "getTermSetById",
+                    id: "getTermStoreTermGroups",
+                    title: "Get term groups",
+                    url: "/_api/v2.1/termStore/termGroups"
+                },
+                {
+                    id: "getTermStoreSets",
+                    title: "Get term sets",
+                    url: "/_api/v2.1/termStore/groups/{groupid}/sets"
+                },
+                {
+                    id: "getTermStoreSetById",
                     title: "Get terms by set id",
-                    url: "/_api/v2.1/termStore/sets('00000000-0000-0000-0000-000000000000')/terms"
+                    url: "/_api/v2.1/termStore/groups/{groupid}/sets/{termSetId}/terms"
                 },
                 {
                     id: "getTermById",
-                    title: "Get term by id",
-                    url: "/_api/v2.1/termStore/terms('00000000-0000-0000-0000-000000000000')"
+                    title: "Get terms by set id next level",
+                    url: "/_api/v2.1/termStore/groups/{groupid}/sets/{termSetId}/terms/{termId}/terms"
                 }
             ]
         },
@@ -261,6 +296,17 @@ export const ConfigsData: Configs = {
                     id: "getWebhooks",
                     title: "Get webhooks",
                     url: "/_api/web/lists/getbytitle('Documents')/subscriptions"
+                }
+            ]
+        },
+        {
+            id: "tenant",
+            title: "Tenant",
+            actions: [
+                {
+                    id: "getTenantAppCatalog",
+                    title: "Get tenant app catalog",
+                    url: "/_api/SP_TenantSettings_Current"
                 }
             ]
         }
